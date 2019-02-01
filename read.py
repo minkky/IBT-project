@@ -3,7 +3,7 @@ import os, csv
 csv_file = open("zinc.csv", "w", encoding="utf-8", newline="\n")
 writer = csv.writer(csv_file)
 
-counts_line = ["numberOfAtoms", "numberOfBonds"]
+counts_line = ["numberOfAtoms", "numberOfBonds"] #for header
 
 for root, dirs, files in os.walk('.'):
 	for fname in files:
@@ -32,12 +32,6 @@ for root, dirs, files in os.walk('.'):
 					numberOfAtoms = int(line.split(" ")[0])
 					numberOfBonds = int(line.split(" ")[1])
 					
-				'''if line_num == int(numberOfAtoms) + 4:
-					print(line)
-
-				if line_num == numberOfAtoms + numberOfBonds + 4:
-					print(line)
-'''
 				if "END" in line or "$$$$" in line:
 					new_line = False
 					if len(compound) == 0:
