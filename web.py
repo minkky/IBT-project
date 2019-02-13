@@ -1,4 +1,4 @@
-import string
+import string, os, sys
 
 def printDash():
 	print("\n=================================\n")
@@ -31,6 +31,19 @@ def printLogPMenu():
 		print("\t", string.ascii_uppercase[index], ":", logp)
 	printDash()
 
+def getRangeLetter(letter):
+	letters = []
+	if len(letter.split("~")) == 1:
+		letters.append(letter)
+	else:
+		start = ord(letter.split("~")[0])
+		end  = ord(letter.split("~")[1])
+		
+		while start <= end:
+			letters.append(chr(start))
+			start = start + 1
+	return letters
+
 fileURL = "http://files.docking.org/3D/"
 
 printMolecularMenu()
@@ -39,6 +52,35 @@ molecular_weight = molecular_weight.upper()
 printLogPMenu()
 logP = input("logP(ex, A or C~F) : ")
 logP = logP.upper()
+print()
 
-print(molecular_weight, logP)
+firstLetter = getRangeLetter(molecular_weight)
+secondLetter = getRangeLetter(logP)
+thirdLetter = ["A", "B", "C", "E", "G", "I"]
+fourthLetter = ["A", "B", "C", "D", "E", "F"]
+fifthLetter = ["H", "L", "M", "R"]
+sixthLetter = ["L", "M", "N", "O", "P"]
 
+substances = []
+subsets = []
+
+for first in firstLetter:
+	for second in secondLetter:
+		substances.append(first + second)
+
+for third in thirdLetter:
+	for fourth in fourthLetter:
+		for fifth in fifthLetter:
+			for sixth in sixthLetter:
+				subsets.append(third +  fourth + fifth + sixth)
+
+dir_name = "zinc/"
+extension = ".xaa.sdf.gz "
+url = "http://files.docking.org/3D/"
+cmd = "curl --remote-time --fail --create-dirs -o "
+
+for substance in substances:
+	for subset in subsets:
+		command = cmd + dir_name + substance+subset+extension + url + substance+"/" + subset+"/"+substance+subset+extension
+		os.system(command)
+		#print(command)
