@@ -60,6 +60,4 @@ for root, dirs, files in os.walk('.'):
 
 					compound.extend(line_split)
 
-
-
 csv_file.close()

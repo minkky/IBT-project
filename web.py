@@ -1,4 +1,4 @@
-import string, os, sys
+import string, subprocess, sys, gzip, shutil, pycurl
 
 def printDash():
 	print("\n=================================\n")
@@ -102,12 +102,17 @@ for third in thirdLetter:
 				subsets.append(third +  fourth + fifth + sixth)
 
 dir_name = "zinc/"
+gz_dirname = dir_name + "gz/"
 extension = ".xaa.sdf.gz "
 url = "http://files.docking.org/3D/"
 cmd = "curl --remote-time --fail --create-dirs -o "
 
 for substance in substances:
 	for subset in subsets:
-		command = cmd + dir_name + substance+subset+extension + url + substance+"/" + subset+"/"+substance+subset+extension
-		os.system(command)
-		#print(command)
+		filename = substance + subset + extension
+		command = cmd + gz_dirname + filename + url + substance+"/" + subset+"/"+ filename
+		result = subprocess.call(command)
+		if result != 22: # 22 is error code when file doesn't existed 
+			with gzip.open(gz_dirname + filename, 'rb') as f_in:
+				with open((dir_name+filename).replace('.gz', ''), 'wb') as f_out:
+					shutil.copyfileobj(f_in, f_out)
